@@ -47,13 +47,13 @@ histogram(MRC_emperical_CO(:),'Normalization','probability')
 axis([0 16 0 1.0]);
 xlabel('Achievable rate (bits/s/Hz)','interpreter','latex', 'FontSize', 20, 'FontName', 'Times New Roman');
 ylabel('PMF','interpreter','latex', 'FontSize', 20, 'FontName', 'Times New Roman');
-annotation('textbox',[0.66 0.80 .18 .08],'String','distributed','interpreter','latex','FontSize', 20, 'FontName', 'Times New Roman')
+annotation('textbox',[0.66 0.80 .18 .08],'String','co-located','interpreter','latex','FontSize', 20, 'FontName', 'Times New Roman')
 subplot(2,1,2)
 histogram(MRC_emperical_CF(:),'Normalization','probability')
 axis([0 16 0 0.1]);
 xlabel('Achievable rate (bits/s/Hz)','interpreter','latex', 'FontSize', 20, 'FontName', 'Times New Roman');
 ylabel('PMF','interpreter','latex', 'FontSize', 20, 'FontName', 'Times New Roman');
-annotation('textbox',[0.66 0.33 .18 .08],'String','co-located','interpreter','latex','FontSize', 20, 'FontName', 'Times New Roman');
+annotation('textbox',[0.66 0.33 .18 .08],'String','distributed','interpreter','latex','FontSize', 20, 'FontName', 'Times New Roman');
 
 function [MRC_emperical,MRC_theoretical] = Rate(size,shadow,M,N,K,tau,SNR_linear,alpha,key)
 

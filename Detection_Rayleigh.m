@@ -9,7 +9,7 @@ MRC_emperical_equation = [];
 
 user_location_total = [];
 
-for t = 1:2
+for t = 1:1000
     
     cell_size = 500;
     shadow = 8;

@@ -9,7 +9,7 @@ MRC_emperical_equation = [];
 
 user_location_total = [];
 
-for t = 1:1
+for t = 1:1000
     
     cell_size = 500;
     shadow = 8;
@@ -23,7 +23,6 @@ for t = 1:1
     SNR_linear = 10^(SNR_db/10);
     bit = 2*ones(M,1);
     alpha = 1-pi*sqrt(3)/2*2.^(-2*bit);
-    ones(M,1);
     
     for i = 1:size(P,2)
         [success_rate_CF_K1(t,i)] = ADMM(cell_size,shadow,M,N,K,K_active,tau,P(i),SNR_linear,alpha,'CF');
@@ -85,14 +84,13 @@ success_rate = 1-size(setdiff(index,found_index),2)/K_active;
 end
 
 function [estimated_activity] = update_step_OFDM(N,K,tau,P,SNR_linear,alpha,beta,activity,x_p_time_domain,x_p_time_domain_double,y_p,estimated_activity,common_estimated_activity,multiplier)
-% sigma_noise = 1000;
 for inner_iteration = 1:10
     estimated_activity_old = estimated_activity;
     for k = 1:K
         estimated_activity_temp = estimated_activity; estimated_activity_temp(k) = 0;
         % Necessary values
         sigma_noise = alpha^2 + alpha*(1-alpha)*(P/tau*SNR_linear*sum(beta.*activity')+1);
-        covariance_k = tau*SNR_linear*sum(cat(3,x_p_time_domain_double{:}).*reshape(estimated_activity_temp.*beta',1,1,[]),3)+sigma_noise*eye(tau);
+        covariance_k = tau*SNR_linear*alpha^2*sum(cat(3,x_p_time_domain_double{:}).*reshape(estimated_activity_temp.*beta',1,1,[]),3)+sigma_noise*eye(tau);
         uv_temp = x_p_time_domain{k}*inv(covariance_k)*x_p_time_domain{k}';
         [u_temp,v] = eig(uv_temp,'vector');
         u = diag(u_temp*x_p_time_domain{k}*inv(covariance_k)*(y_p'*y_p/N)*inv(covariance_k)*x_p_time_domain{k}'*u_temp');
@@ -171,6 +169,6 @@ end
 function [value] = test_log_likelihood(estimated_activity_temp,k,potential,tau,SNR_linear,x_p_time_domain_double,beta,y_p,N,alpha,activity,P)
 estimated_activity_temp(k) = potential;
 sigma_noise = alpha^2 + alpha*(1-alpha)*(P/tau*SNR_linear*sum(beta.*activity')+1);
-covariance = tau*SNR_linear*sum(cat(3,x_p_time_domain_double{:}).*reshape(estimated_activity_temp.*beta',1,1,[]),3)+sigma_noise*eye(tau);
+covariance = tau*SNR_linear*alpha^2*sum(cat(3,x_p_time_domain_double{:}).*reshape(estimated_activity_temp.*beta',1,1,[]),3)+sigma_noise*eye(tau);
 value = real(log(det(covariance))+trace(inv(covariance)*(y_p'*y_p/N)));
 end
